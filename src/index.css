@@ -1,0 +1,316 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "tailwindcss/preflight";
+
+/* Tailwind v4 uses the utilities entry only; component layers are handled differently. */
+@tailwind utilities;
+
+/* Add any global styles below. */
+@import "tailwindcss";
+/* @theme {
+  --font-poppins: "Poppins", sans-serif;
+} */
+
+/* --------------------------
+   Logo marquee styles
+   Paste into index.css
+   -------------------------- */
+
+/* Container: hides overflow */
+.marquee {
+  width: 90%;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: auto;
+}
+
+/* The moving track - use this element to hold a duplicated list of logos */
+.marquee-track {
+  display: flex;
+  gap: 3.5rem; /* space between logos */
+  align-items: center;
+  width: max-content;
+  padding: 10px; /* important for smooth scroll */
+}
+
+/* Top row: moves left -> right (content slides right) */
+.marquee-track--right {
+  animation: marquee-right 90s linear infinite;
+  will-change: transform;
+}
+
+/* Bottom row: moves right -> left (content slides left) */
+.marquee-track--left {
+  animation: marquee-left 90s linear infinite;
+  will-change: transform;
+}
+
+/* Pause on hover for better accessibility */
+.marquee-track--right:hover,
+.marquee-track--left:hover {
+  animation-play-state: paused;
+}
+
+/* Logo appearance */
+.marquee-track img {
+  height: 55px;
+  width: auto;
+  object-fit: contain; /* adjust size as needed */
+  opacity: 0.65;
+  transition: opacity 150ms ease, transform 150ms ease;
+  user-select: none;
+  pointer-events: auto;
+}
+.marquee-track img:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/src/fonts/SFPRODISPLAYREGULAR.OTF") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+body {
+  font-family: "SF Pro Display";
+}
+
+/* Normalize logo visual size */
+.logo-box {
+  width: 130px; /* controls perceived logo size */
+  height: 55px; /* same height for all logos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Logo inside box */
+.logo-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* MOST IMPORTANT */
+  opacity: 0.65;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+/* Hover polish */
+.logo-box img:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+/* ================================
+   CKEditor Content Styling (Prose)
+================================== */
+
+/* ✅ Table wrapper used by CKEditor */
+.prose figure.table {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+/* ✅ Table style */
+.prose figure.table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ✅ Table header + body cell */
+.prose figure.table th,
+.prose figure.table td {
+  border: 1px solid #d1d5db; /* gray-300 */
+  padding: 10px;
+  text-align: left;
+}
+
+/* ✅ Table header */
+.prose figure.table th {
+  background: #f3f4f6; /* gray-100 */
+  font-weight: 600;
+}
+
+/* ✅ Optional: row hover */
+.prose figure.table tbody tr:hover {
+  background: #f9fafb; /* gray-50 */
+}
+
+/* ✅ Make headings red inside CKEditor content */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: #dc2626 !important; /* red-600 */
+}
+
+/* ✅ Strong tag red */
+.prose strong {
+  color: #dc2626 !important;
+}
+
+/* Keyframes:
+   - marquee-left: content moves left (0% -> -50%)
+   - marquee-right: content moves right (-50% -> 0%)
+   Note: you should duplicate the logo list inside the track so the animation loops seamlessly.
+*/
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .marquee-track img {
+    height: 48px;
+    gap: 1.25rem;
+  }
+  .marquee-track {
+    gap: 1.25rem;
+  }
+  .marquee-track--left,
+  .marquee-track--right {
+    animation-duration: 100s;
+  } /* slower on small screens */
+  .logo-box {
+    width: 110px;
+    height: 48px;
+  }
+}
+
+.wavy-btn {
+  /* keep button text white on top */
+  color: #fff;
+  background: #000;
+  border: none;
+  line-height: 1;
+  position: relative;
+}
+
+/* the SVG is large and initially positioned below (so wave hidden).
+   On hover we translate it up so the white wave fills from bottom -> up. */
+.wavy-btn .wave-svg {
+  position: absolute;
+  left: 0;
+  right: 50;
+  bottom: -70%; /* start below the button */
+  width: 290%; /* wide to allow smooth wave */
+  height: 280%;
+  transform: translateY(100%);
+  transition: transform 0.55s cubic-bezier(0.2, 0.9, 0.2, 1), bottom 0.55s;
+  pointer-events: none; /* let clicks pass to the button */
+  z-index: 5; /* behind text but above background */
+}
+
+/* move the svg up when hovering the button */
+.wavy-btn:hover .wave-svg {
+  transform: translateY(2%); /* tune this to control fill height */
+  bottom: -10%;
+}
+
+/* The path wobble (only active on hover so it doesn't animate constantly) */
+.wavy-btn .wave-path {
+  transform-origin: 50% 50%;
+  transition: transform 1s linear;
+  will-change: transform;
+}
+
+/* enable a subtle "liquid" motion while hovered */
+.wavy-btn:hover .wave-path {
+  animation: waveFloat 1.9s ease-in-out infinite;
+}
+
+/* wobble keyframes */
+@keyframes waveFloat {
+  0% {
+    transform: translateX(0) translateY(0) scaleX(1);
+  }
+  25% {
+    transform: translateX(-6px) translateY(-4px) scaleX(1.02);
+  }
+  50% {
+    transform: translateX(0) translateY(-6px) scaleX(1);
+  }
+  75% {
+    transform: translateX(6px) translateY(-4px) scaleX(1.2);
+  }
+  100% {
+    transform: translateX(0) translateY(0) scaleX(1);
+  }
+}
+
+/* ensure button text contrast after fill (optional) */
+/* If you want the text to change color when the white wave covers it: */
+.wavy-btn:hover {
+  color: #000; /* change text to black when wave covers it */
+}
+
+/* Force equal height slick slides */
+.slick-track {
+  display: flex !important;
+}
+
+.slick-slide {
+  height: inherit !important;
+  display: flex !important;
+}
+
+.slick-slide > div {
+  display: flex;
+  width: 100%;
+}
+
+/* ===============================
+   Custom Equal Pill Dots (react-slick)
+   =============================== */
+
+.slick-dots {
+  position: relative;
+  bottom: -40px !important;
+  margin-top: 32px;
+  display: flex !important;
+  justify-content: center;
+  gap: 12px;
+}
+
+.slick-dots li {
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+}
+
+.slick-dots li button {
+  width: 36px !important; /* SAME for all pills */
+  height: 6px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  background-color: #e5e7eb !important; /* gray-300 */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.slick-dots li button::before {
+  content: none !important; /* remove default dot */
+}
+
+/* Active pill */
+.slick-dots li.slick-active button {
+  background-color: #ef4444 !important; /* red-500 */
+}
+
+.slick-dots li:not(:last-child) {
+  margin-right: 12px !important; /* 👈 controls gap */
+}

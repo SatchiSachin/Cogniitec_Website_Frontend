@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        TARGET_SERVER = 'ubuntu@35.154.163.136'      // EC2 user and IP
+        FRONTEND_DIR = '/home/ubuntu/cogniitec_frontend_new' // Frontend directory
+        FRONTEND_SERVICE_NAME = 'cogniitec_frontend_new'     // PM2 service name
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Deploy Frontend to EC2') {
+            steps {
+                script {
+
+                    // Copy frontend code to EC2
+                    sh """
+                        scp -r ./* ${TARGET_SERVER}:${FRONTEND_DIR}/
+                    """
+
+                    // SSH into EC2 and deploy
+                    sh """
+                        ssh ${TARGET_SERVER} << EOF
+                        cd ${FRONTEND_DIR}
+
+                        rm -rf node_modules package-lock.json
+
+                        npm install express@4 --legacy-peer-deps
+                        npm install cors --legacy-peer-deps
+                        npm install --legacy-peer-deps
+                        npm run build
+
+                        pm2 restart ${FRONTEND_SERVICE_NAME} || pm2 start server.js --name "${FRONTEND_SERVICE_NAME}"
+EOF
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Frontend Deployed and Service Restarted Successfully!'
+        }
+        failure {
+            echo 'Frontend Deployment Failed. Please check logs for details.'
+        }
+    }
+}
