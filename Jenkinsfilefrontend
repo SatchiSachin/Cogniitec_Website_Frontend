@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        TARGET_SERVER = 'ubuntu@35.154.163.136'      // EC2 user and IP
+        TARGET_SERVER = 'ubuntu@35.170.71.78'      // EC2 user and IP
         FRONTEND_DIR = '/home/ubuntu/cogniitec_frontend_new' // Frontend directory
-        FRONTEND_SERVICE_NAME = 'cogniitec_frontend_new'     // PM2 service name
+        FRONTEND_SERVICE_NAME = 'Cog_front'     // PM2 service name
     }
 
     stages {
